@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Financial Calculator</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FinCalc">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>Financial Calculator</h1>
+            <p class="subtitle">Pencatatan Keuangan Harian</p>
+        </header>
+
+        <main class="main">
+            <!-- Saldo Section -->
+            <section class="saldo-section">
+                <div class="saldo-card">
+                    <span class="saldo-label">Sisa Uang</span>
+                    <span id="saldo" class="saldo-value">Rp 0</span>
+                </div>
+                <div class="summary-row">
+                    <div class="summary-card income">
+                        <span class="summary-label">Pemasukan</span>
+                        <span id="totalIncome" class="summary-value">Rp 0</span>
+                    </div>
+                    <div class="summary-card expense">
+                        <span class="summary-label">Pengeluaran</span>
+                        <span id="totalExpense" class="summary-value">Rp 0</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Form Input -->
+            <section class="form-section">
+                <h2>Tambah Transaksi</h2>
+                <form id="transactionForm">
+                    <div class="form-group">
+                        <label for="date">Tanggal</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Keterangan</label>
+                        <input type="text" id="desc" placeholder="Contoh: Gaji Bulanan" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Jenis Transaksi</label>
+                        <div class="radio-group">
+                            <label class="radio-label income-label">
+                                <input type="radio" name="type" value="income" checked>
+                                <span class="radio-custom"></span>
+                                Pemasukan
+                            </label>
+                            <label class="radio-label expense-label">
+                                <input type="radio" name="type" value="expense">
+                                <span class="radio-custom"></span>
+                                Pengeluaran
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Nominal (Rp)</label>
+                        <input type="text" id="amount" inputmode="numeric" placeholder="0" required>
+                    </div>
+                    <button type="submit" id="saveBtn" class="btn-save">SIMPAN</button>
+                </form>
+            </section>
+
+            <!-- Riwayat Transaksi -->
+            <section class="history-section">
+                <h2>Riwayat Transaksi</h2>
+                <div class="filter-bar">
+                    <button id="filterAll" class="filter-btn active">Semua</button>
+                    <div class="filter-date-wrap">
+                        <input type="date" id="filterDate">
+                        <button id="filterClear" class="filter-clear-btn" title="Hapus filter">&times;</button>
+                    </div>
+                </div>
+                <div id="historyList" class="history-list">
+                    <p class="empty-state">Belum ada transaksi</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/Bulanan/service-worker.js');
+        }
+    </script>
+</body>
+</html>

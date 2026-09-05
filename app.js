@@ -2,19 +2,20 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const COLLECTION = 'transactions';
 
+const nameInput = document.getElementById('name');
 const dateInput = document.getElementById('date');
 const descInput = document.getElementById('desc');
 const amountInput = document.getElementById('amount');
 const form = document.getElementById('transactionForm');
 const historyList = document.getElementById('historyList');
-const saldoEl = document.getElementById('saldo');
-const totalIncomeEl = document.getElementById('totalIncome');
-const totalExpenseEl = document.getElementById('totalExpense');
 const filterAll = document.getElementById('filterAll');
+const filterMajid = document.getElementById('filterMajid');
+const filterRatih = document.getElementById('filterRatih');
 const filterDate = document.getElementById('filterDate');
 const filterClear = document.getElementById('filterClear');
 
 let activeFilter = null;
+let activePersonFilter = null;
 let allTransactions = [];
 
 function formatCurrency(num) {
@@ -34,29 +35,33 @@ function setDefaultDate() {
     dateInput.value = `${yyyy}-${mm}-${dd}`;
 }
 
-function updateSummary() {
-    let totalIncome = 0;
-    let totalExpense = 0;
-
-    allTransactions.forEach(t => {
-        if (t.type === 'income') {
-            totalIncome += t.amount;
-        } else {
-            totalExpense += t.amount;
-        }
+function calcPerson(name) {
+    const txns = allTransactions.filter(t => t.name === name);
+    let income = 0;
+    let expense = 0;
+    txns.forEach(t => {
+        if (t.type === 'income') income += t.amount;
+        else expense += t.amount;
     });
+    return { income, expense, saldo: income - expense };
+}
 
-    const saldo = totalIncome - totalExpense;
+function updateSummary() {
+    const majid = calcPerson('Majid');
+    const ratih = calcPerson('Ratih');
 
-    saldoEl.textContent = formatCurrency(saldo);
-    totalIncomeEl.textContent = formatCurrency(totalIncome);
-    totalExpenseEl.textContent = formatCurrency(totalExpense);
+    document.getElementById('saldoMajid').textContent = formatCurrency(majid.saldo);
+    document.getElementById('incomeMajid').textContent = formatCurrency(majid.income);
+    document.getElementById('expenseMajid').textContent = formatCurrency(majid.expense);
 
-    if (saldo < 0) {
-        saldoEl.style.color = '#ef4444';
-    } else {
-        saldoEl.style.color = '#1a1a2e';
-    }
+    document.getElementById('saldoRatih').textContent = formatCurrency(ratih.saldo);
+    document.getElementById('incomeRatih').textContent = formatCurrency(ratih.income);
+    document.getElementById('expenseRatih').textContent = formatCurrency(ratih.expense);
+
+    const saldoMajidEl = document.getElementById('saldoMajid');
+    const saldoRatihEl = document.getElementById('saldoRatih');
+    saldoMajidEl.style.color = majid.saldo < 0 ? '#ef4444' : '#1a1a2e';
+    saldoRatihEl.style.color = ratih.saldo < 0 ? '#ef4444' : '#1a1a2e';
 }
 
 function renderHistory() {
@@ -67,12 +72,16 @@ function renderHistory() {
         return;
     }
 
+    if (activePersonFilter) {
+        filtered = filtered.filter(t => t.name === activePersonFilter);
+    }
+
     if (activeFilter) {
         filtered = filtered.filter(t => t.date === activeFilter);
     }
 
     if (filtered.length === 0) {
-        historyList.innerHTML = '<p class="empty-state">Tidak ada transaksi pada tanggal ini</p>';
+        historyList.innerHTML = '<p class="empty-state">Tidak ada transaksi</p>';
         return;
     }
 
@@ -81,17 +90,22 @@ function renderHistory() {
         return b.id - a.id;
     });
 
-    historyList.innerHTML = sorted.map(t => `
+    historyList.innerHTML = sorted.map(t => {
+        const badgeClass = t.name === 'Majid' ? 'majid' : 'ratih';
+        return `
         <div class="history-item ${t.type}">
             <div class="history-icon">${t.type === 'income' ? '↑' : '↓'}</div>
             <div class="history-details">
                 <div class="history-desc">${escapeHtml(t.desc)}</div>
-                <div class="history-date">${formatDate(t.date)}</div>
+                <div class="history-meta">
+                    <span class="history-date">${formatDate(t.date)}</span>
+                    <span class="history-badge ${badgeClass}">${escapeHtml(t.name)}</span>
+                </div>
             </div>
             <span class="history-amount">${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}</span>
             <button class="history-delete" onclick="deleteTransaction('${t.id}')" title="Hapus">&times;</button>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 }
 
 function escapeHtml(text) {
@@ -117,18 +131,20 @@ amountInput.addEventListener('input', function () {
 form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
+    const name = nameInput.value;
     const date = dateInput.value;
     const desc = descInput.value.trim();
     const type = document.querySelector('input[name="type"]:checked').value;
     const amount = parseAmount(amountInput.value);
 
-    if (!date || !desc || amount <= 0) {
+    if (!name || !date || !desc || amount <= 0) {
         alert('Mohon lengkapi semua data dengan benar.');
         return;
     }
 
     const newTransaction = {
         id: Date.now(),
+        name,
         date,
         desc,
         type,
@@ -171,29 +187,43 @@ async function loadTransactions() {
     }
 }
 
+function clearPersonFilter() {
+    activePersonFilter = null;
+    filterAll.classList.add('active');
+    filterMajid.classList.remove('active');
+    filterRatih.classList.remove('active');
+}
+
 // Filter events
 filterAll.addEventListener('click', function () {
-    activeFilter = null;
-    filterDate.value = '';
-    filterDate.classList.remove('active');
-    filterAll.classList.add('active');
+    clearPersonFilter();
+    renderHistory();
+});
+
+filterMajid.addEventListener('click', function () {
+    activePersonFilter = 'Majid';
+    filterAll.classList.remove('active');
+    filterMajid.classList.add('active');
+    filterRatih.classList.remove('active');
+    renderHistory();
+});
+
+filterRatih.addEventListener('click', function () {
+    activePersonFilter = 'Ratih';
+    filterAll.classList.remove('active');
+    filterMajid.classList.remove('active');
+    filterRatih.classList.add('active');
     renderHistory();
 });
 
 filterDate.addEventListener('change', function () {
-    if (this.value) {
-        activeFilter = this.value;
-        filterAll.classList.remove('active');
-        this.classList.add('active');
-    }
+    activeFilter = this.value || null;
     renderHistory();
 });
 
 filterClear.addEventListener('click', function () {
     activeFilter = null;
     filterDate.value = '';
-    filterDate.classList.remove('active');
-    filterAll.classList.add('active');
     renderHistory();
 });
 

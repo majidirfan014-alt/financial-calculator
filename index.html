@@ -20,20 +20,51 @@
         </header>
 
         <main class="main">
-            <!-- Saldo Section -->
+            <!-- Saldo Section - Dual Person -->
             <section class="saldo-section">
-                <div class="saldo-card">
-                    <span class="saldo-label">Sisa Uang</span>
-                    <span id="saldo" class="saldo-value">Rp 0</span>
-                </div>
-                <div class="summary-row">
-                    <div class="summary-card income">
-                        <span class="summary-label">Pemasukan</span>
-                        <span id="totalIncome" class="summary-value">Rp 0</span>
+                <div class="saldo-grid">
+                    <!-- Majid -->
+                    <div class="person-card majid">
+                        <div class="person-header">
+                            <span class="person-avatar">M</span>
+                            <span class="person-name">Majid</span>
+                        </div>
+                        <div class="person-saldo">
+                            <span class="saldo-label">Sisa Uang</span>
+                            <span id="saldoMajid" class="saldo-value">Rp 0</span>
+                        </div>
+                        <div class="person-summary">
+                            <div class="ps-item income">
+                                <span class="ps-label">Masuk</span>
+                                <span id="incomeMajid" class="ps-value">Rp 0</span>
+                            </div>
+                            <div class="ps-item expense">
+                                <span class="ps-label">Keluar</span>
+                                <span id="expenseMajid" class="ps-value">Rp 0</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="summary-card expense">
-                        <span class="summary-label">Pengeluaran</span>
-                        <span id="totalExpense" class="summary-value">Rp 0</span>
+
+                    <!-- Ratih -->
+                    <div class="person-card ratih">
+                        <div class="person-header">
+                            <span class="person-avatar">R</span>
+                            <span class="person-name">Ratih</span>
+                        </div>
+                        <div class="person-saldo">
+                            <span class="saldo-label">Sisa Uang</span>
+                            <span id="saldoRatih" class="saldo-value">Rp 0</span>
+                        </div>
+                        <div class="person-summary">
+                            <div class="ps-item income">
+                                <span class="ps-label">Masuk</span>
+                                <span id="incomeRatih" class="ps-value">Rp 0</span>
+                            </div>
+                            <div class="ps-item expense">
+                                <span class="ps-label">Keluar</span>
+                                <span id="expenseRatih" class="ps-value">Rp 0</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -42,6 +73,14 @@
             <section class="form-section">
                 <h2>Tambah Transaksi</h2>
                 <form id="transactionForm">
+                    <div class="form-group">
+                        <label for="name">Nama</label>
+                        <select id="name" required>
+                            <option value="">-- Pilih Nama --</option>
+                            <option value="Majid">Majid</option>
+                            <option value="Ratih">Ratih</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="date">Tanggal</label>
                         <input type="date" id="date" required>
@@ -78,6 +117,8 @@
                 <h2>Riwayat Transaksi</h2>
                 <div class="filter-bar">
                     <button id="filterAll" class="filter-btn active">Semua</button>
+                    <button id="filterMajid" class="filter-btn filter-majid">Majid</button>
+                    <button id="filterRatih" class="filter-btn filter-ratih">Ratih</button>
                     <div class="filter-date-wrap">
                         <input type="date" id="filterDate">
                         <button id="filterClear" class="filter-clear-btn" title="Hapus filter">&times;</button>

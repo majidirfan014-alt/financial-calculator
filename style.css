@@ -40,73 +40,130 @@ body {
     padding: 0 16px;
 }
 
-/* Saldo Section */
+/* Saldo Section - Dual Person */
 .saldo-section {
     margin-top: -10px;
     padding-top: 10px;
+    margin-bottom: 20px;
 }
 
-.saldo-card {
+.saldo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 400px) {
+    .saldo-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.person-card {
     background: white;
     border-radius: 16px;
-    padding: 20px;
-    text-align: center;
+    padding: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-top: 4px solid transparent;
+}
+
+.person-card.majid {
+    border-top-color: #3b82f6;
+}
+
+.person-card.ratih {
+    border-top-color: #ec4899;
+}
+
+.person-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.person-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+}
+
+.majid .person-avatar {
+    background: #3b82f6;
+}
+
+.ratih .person-avatar {
+    background: #ec4899;
+}
+
+.person-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+.person-saldo {
+    text-align: center;
     margin-bottom: 12px;
 }
 
 .saldo-label {
     display: block;
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 6px;
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 4px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .saldo-value {
     display: block;
-    font-size: 32px;
+    font-size: 22px;
     font-weight: 800;
     color: #1a1a2e;
 }
 
-.summary-row {
+.person-summary {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 8px;
 }
 
-.summary-card {
-    background: white;
-    border-radius: 12px;
-    padding: 16px;
+.ps-item {
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 8px 4px;
+    border-radius: 8px;
+    background: #f9fafb;
 }
 
-.summary-label {
+.ps-label {
     display: block;
-    font-size: 12px;
-    color: #888;
-    margin-bottom: 4px;
+    font-size: 10px;
+    color: #999;
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
 
-.summary-value {
+.ps-value {
     display: block;
-    font-size: 18px;
+    font-size: 13px;
     font-weight: 700;
+    margin-top: 2px;
 }
 
-.summary-card.income .summary-value {
-    color: #22c55e;
+.ps-item.income .ps-value {
+    color: #16a34a;
 }
 
-.summary-card.expense .summary-value {
-    color: #ef4444;
+.ps-item.expense .ps-value {
+    color: #dc2626;
 }
 
 /* Form Section */
@@ -138,7 +195,8 @@ body {
 }
 
 .form-group input[type="date"],
-.form-group input[type="text"] {
+.form-group input[type="text"],
+.form-group select {
     width: 100%;
     padding: 14px 16px;
     border: 2px solid #e5e7eb;
@@ -150,7 +208,15 @@ body {
     -webkit-appearance: none;
 }
 
-.form-group input:focus {
+.form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
     outline: none;
     border-color: #667eea;
     background: white;
@@ -272,16 +338,17 @@ body {
 .filter-bar {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     margin-bottom: 14px;
+    flex-wrap: wrap;
 }
 
 .filter-btn {
-    padding: 8px 14px;
+    padding: 8px 12px;
     border: 2px solid #e5e7eb;
     border-radius: 10px;
     background: white;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     color: #666;
     cursor: pointer;
@@ -293,6 +360,18 @@ body {
     border-color: #667eea;
     background: #eef2ff;
     color: #667eea;
+}
+
+.filter-btn.filter-majid.active {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+.filter-btn.filter-ratih.active {
+    border-color: #ec4899;
+    background: #fdf2f8;
+    color: #ec4899;
 }
 
 .filter-date-wrap {
@@ -363,8 +442,8 @@ body {
 .history-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px;
+    gap: 10px;
+    padding: 12px;
     background: #f9fafb;
     border-radius: 12px;
     border-left: 4px solid transparent;
@@ -379,13 +458,13 @@ body {
 }
 
 .history-icon {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
     flex-shrink: 0;
 }
 
@@ -403,7 +482,7 @@ body {
 }
 
 .history-desc {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     color: #1a1a2e;
     white-space: nowrap;
@@ -411,14 +490,39 @@ body {
     text-overflow: ellipsis;
 }
 
+.history-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 3px;
+}
+
 .history-date {
-    font-size: 12px;
+    font-size: 11px;
     color: #999;
-    margin-top: 2px;
+}
+
+.history-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.history-badge.majid {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.history-badge.ratih {
+    background: #fce7f3;
+    color: #db2777;
 }
 
 .history-amount {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     white-space: nowrap;
 }

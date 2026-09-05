@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fincalc-v2';
+const CACHE_NAME = 'fincalc-v3';
 const ASSETS = [
     './',
     './index.html',

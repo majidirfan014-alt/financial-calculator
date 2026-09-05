@@ -1,10 +1,12 @@
-const CACHE_NAME = 'fincalc-v1';
+const CACHE_NAME = 'fincalc-v2';
 const ASSETS = [
-    '/Bulanan/',
-    '/Bulanan/index.html',
-    '/Bulanan/style.css',
-    '/Bulanan/app.js',
-    '/Bulanan/manifest.json'
+    './',
+    './index.html',
+    './style.css',
+    './app.js',
+    './firebase-config.js',
+    './manifest.json',
+    './icon.svg'
 ];
 
 self.addEventListener('install', e => {

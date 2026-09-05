@@ -2,7 +2,7 @@
     "name": "Financial Calculator",
     "short_name": "FinCalc",
     "description": "Pencatatan Keuangan Harian",
-    "start_url": "/Bulanan/",
+    "start_url": "./",
     "display": "standalone",
     "orientation": "portrait",
     "background_color": "#f0f2f5",
